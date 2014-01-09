@@ -17,6 +17,15 @@ except ImportError:
 
 class ProxmoxHTTPAuth(AuthBase):
     def __init__(self, base_url, username, password):
+        response = requests.post(base_url + "/access/ticket",
+                                verify=False,
+                                data={"username": username, "password": password})
+
+        if response.status_code >= 400:
+            raise StandardError("{0} reason:{1}".format(
+                response.status_code, response.reason
+            ))
+
         response_data = requests.post(base_url + "/access/ticket",
                                       verify=False,
                                       data={"username": username, "password": password}).json()["data"]
