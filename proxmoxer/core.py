@@ -64,7 +64,9 @@ class ProxmoxResource(ProxmoxResourceBase):
         logger.debug('Status code: %s, output: %s', resp.status_code, resp.content)
 
         if resp.status_code >= 400:
-            raise ResourceException("{0} {1}".format(resp.status_code, httplib.responses[resp.status_code]))
+            raise ResourceException("{0} {1} reason:{2}".format(
+                resp.status_code, httplib.responses[resp.status_code], resp.reason
+            ))
         elif 200 <= resp.status_code <= 299:
             return self._store["serializer"].loads(resp)
 
